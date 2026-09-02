@@ -1,0 +1,49 @@
+generator client { provider = "prisma-client-js" }
+datasource db { provider = "postgresql" url = env("DATABASE_URL") }
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  addresses     String[]
+  createdAt     DateTime  @default(now())
+  orders        Order[]
+}
+
+model Restaurant {
+  id            String    @id @default(cuid())
+  name          String
+  image         String
+  cuisine       String
+  rating        Float
+  deliveryTime  String
+  deliveryFee   Float
+  menu          MenuItem[]
+}
+
+model MenuItem {
+  id            String    @id @default(cuid())
+  name          String
+  description   String
+  price         Float
+  image         String?
+  restaurantId  String
+}
+
+model Order {
+  id            String    @id @default(cuid())
+  userId        String
+  restaurantId  String
+  items         OrderItem[]
+  total         Float
+  status        String    @default("pending")
+  createdAt     DateTime  @default(now())
+}
+
+model OrderItem {
+  id            String    @id @default(cuid())
+  orderId       String
+  menuItemId    String
+  quantity      Int
+  price         Float
+}
